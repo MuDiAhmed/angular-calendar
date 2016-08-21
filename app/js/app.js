@@ -13,11 +13,11 @@ app.config(['$stateProvider', '$urlRouterProvider',
           templateUrl: 'partials/main.html',
           controller: 'MainController'
         })
-        .state('home', {
+        .state('calender', {
           url:'',
           parent:'/',
-          templateUrl: 'partials/home.html',
-          controller: 'HomeController'
+          templateUrl: 'partials/calender.html',
+          controller: 'CalenderController'
         });
     $urlRouterProvider.otherwise('/');
   }
