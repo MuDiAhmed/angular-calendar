@@ -9,27 +9,17 @@ app.directive('calender',[function(){
             datesObject: "="
         },
         link: function(scope, element, attrs, form) {
-            var today = new Date(),
-                thisYear = today.getFullYear(),
-                thisMonth = today.getMonth()+1,
-                dayNumber = today.getDate(),
+            var today,
+                thisYear,
+                thisMonth,
+                dayNumber,
                 thisMonthLength = 31,
                 prevMonthLength = 31,
                 weekDays = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],
                 monthNames = ["January", "February", "March", "April", "May", "June",
                     "July", "August", "September", "October", "November", "December"
                 ];
-            scope.thisMonth = thisMonth;
-            scope.thisYear = thisYear;
-            scope.dayNumber = dayNumber;
-            scope.month = monthNames[thisMonth-1];
-            scope.thisMonthDays = [];
-            if([2,4,6,9,11].indexOf(thisMonth) != -1){
-                thisMonthLength = 30;
-            }
-            if([3-5-7-10-12].indexOf(thisMonth) != -1){
-                prevMonthLength = 30;
-            }
+            prevCalculations();
             buildThisScreen();
             function prevCalculations(month,year){
                 if(month&&year){
@@ -38,6 +28,8 @@ app.directive('calender',[function(){
                     if(date.getFullYear() == year && date.getMonth()+1 == month){
                         today = new Date();
                     }
+                }else{
+                    today = new Date();
                 }
                 thisYear = today.getFullYear();
                 thisMonth = today.getMonth()+1;
