@@ -15,7 +15,6 @@ module.exports = function(grunt) {
             }
         };
     var serveStatic = require('serve-static');
-    // require('load-grunt-tasks')(grunt);
     require('load-grunt-tasks')(grunt);
     // Project configuration.
     grunt.initConfig({
@@ -26,7 +25,7 @@ module.exports = function(grunt) {
         jshint:{
             app: {
                 // options: {jshintrc: 'node_modules/jshint/src/jshint.js'},
-                src: ['app/**/*.js'],
+                src: ['app/**/*.js']
             }
         },
         watch: {
@@ -54,34 +53,8 @@ module.exports = function(grunt) {
                 options: {
                     open: true,
                     middleware: function (connect) {
-                        grunt.log.write(connect())
                         return [
-                            // connect.static('.tmp'),
-                            // connect().use(
-                            //     '/bower_components',
-                            //     connect.static('./bower_components')
-                            // ),
-                            // connect().use(
-                            //     '/app/styles',
-                            //     connect.static('./app/styles')
-                            // ),
                             serveStatic(appConfig.app)
-                        ];
-                    }
-                }
-            },
-            test: {
-                options: {
-                    port: 9001,
-                    middleware: function (connect) {
-                        return [
-                            connect.static('.tmp'),
-                            connect.static('test'),
-                            connect().use(
-                                '/bower_components',
-                                connect.static('./bower_components')
-                            ),
-                            connect.static(appConfig.app)
                         ];
                     }
                 }
@@ -137,37 +110,20 @@ module.exports = function(grunt) {
                 }
             }
         },
-        // Empties folders to start fresh
-        clean: {
-            server: '<%= appConfigs.app %>/.tmp'
-        },
         // Run some tasks in parallel to speed up the build process
         concurrent: {
             server: [
                 'compass:server'
-            ],
-            test: [
-                'compass'
-            ],
-            dist: [
-                'compass:dist',
-                'imagemin',
-                'svgmin'
             ]
         }
     });
-    // Load grunt tasks automatically
-    // grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.registerTask('serve', 'Compile then start a connect web server', function (target) {
         if (target === 'dist') {
             return grunt.task.run(['build', 'connect:dist:keepalive']);
         }
 
         grunt.task.run([
-            'clean:server',//clean file 
             'wiredep',
-            // 'concurrent:server',
-            // 'postcss:server',
             'connect:livereload',
             'watch'
         ]);
