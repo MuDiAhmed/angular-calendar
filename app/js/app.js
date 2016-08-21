@@ -7,15 +7,8 @@ var app = angular.module('myApp', [
 app.config(['$stateProvider', '$urlRouterProvider',
   function($stateProvider, $urlRouterProvider) {
     $stateProvider
-        .state('/', {
-          url:'/',
-          abstract: true,
-          templateUrl: 'partials/main.html',
-          controller: 'MainController'
-        })
         .state('calender', {
-          url:'',
-          parent:'/',
+          url:'/',
           templateUrl: 'partials/calender.html',
           controller: 'CalenderController'
         });
