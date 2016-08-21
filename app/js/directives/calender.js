@@ -18,7 +18,9 @@ app.directive('calender',[function(){
                 weekDays = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],
                 monthNames = ["January", "February", "March", "April", "May", "June",
                     "July", "August", "September", "October", "November", "December"
-                ];
+                ],
+                storedMonth;
+            scope.selectedDays = [];
             prevCalculations();
             buildThisScreen();
             function prevCalculations(month,year){
@@ -33,6 +35,7 @@ app.directive('calender',[function(){
                 }
                 thisYear = today.getFullYear();
                 thisMonth = today.getMonth()+1;
+                storedMonth = thisMonth;
                 dayNumber = today.getDate();
                 scope.thisMonth = thisMonth;
                 scope.thisYear = thisYear;
@@ -48,9 +51,7 @@ app.directive('calender',[function(){
             }
             function buildThisScreen(){
                 var firstDayOfMonth = new Date(thisMonth+'-1-'+thisYear).toDateString();
-                console.log(firstDayOfMonth);
                 firstDayOfMonth = firstDayOfMonth.slice(0,firstDayOfMonth.indexOf(' '));
-                console.log(firstDayOfMonth);
                 var firstDayIndex = weekDays.indexOf(firstDayOfMonth),
                     firstDay = prevMonthLength-firstDayIndex+1,
                     firstWeek = true;
@@ -65,14 +66,27 @@ app.directive('calender',[function(){
                     }
                     if((firstWeek&&firstDay>7)||(x>thisMonthLength&&firstDay<23)){
                         thisMonthCondition=false;
+                        if(firstWeek){
+                            thisMonth--;
+                        }else{
+                            thisMonth = storedMonth+1;
+                        }
+                    }else{
+                        thisMonth = storedMonth;
                     }
                     if(dayNumber == firstDay && thisMonthCondition){
                         todayCondition = true;
                     }
+                    var dayName = new Date(thisMonth+'-'+firstDay+'-'+thisYear).toDateString();
+                    dayName = dayName.slice(0,dayName.indexOf(' '));
                     scope.thisMonthDays.push({
                         number:firstDay,
                         thisMonth:thisMonthCondition,
-                        today:todayCondition
+                        today:todayCondition,
+                        year:thisYear,
+                        month:thisMonth,
+                        todayName:dayName,
+                        selected:false
                     });
                     firstDay++;
                 }
@@ -98,6 +112,14 @@ app.directive('calender',[function(){
                 prevCalculations(month,year);
                 buildThisScreen();
             };
+            scope.selectDays = function(day){
+                day.selected = true;
+                scope.selectedDays.push(day);
+            };
+            scope.removeSelection = function(day){
+                day.selected = false;
+                scope.selectedDays.splice(scope.selectedDays.indexOf(day), 1);
+            }
         }
     };    
 }]);

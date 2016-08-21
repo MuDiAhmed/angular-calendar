@@ -14,6 +14,7 @@ body{
   width: 50%;
   background-color: white;
   color: black;
+  position: relative;
   //padding: 10px 20px;
   .calenderHeader{
     background-color: rgba(26, 92, 225, 0.92);
@@ -52,6 +53,25 @@ body{
     .today{
       background-color: rgba(100, 255, 252, 0.41);
       //color: white;
+    }
+    .selected{
+      background-color: rgba(26, 92, 225, 0.5);
+    }
+  }
+  .selectedDaysWrapper{
+    position: absolute;
+    right: -220px;
+    top: 0;
+    background-color: white;
+    width: 200px;
+    padding: 10px;
+    overflow-y: scroll;
+    height: calc(100% - 20px);
+    h5{
+      background-color: rgba(26, 92, 225, 0.92);
+      padding: 5px 0 5px 5px;
+      margin-left: -10px;
+      color: white;
     }
   }
 }

@@ -13,6 +13,13 @@
     <span class="day">Sat</span>
 </div>
 <div class="row weekDays">
-    <span class="day-number" ng-class="{ today: day.today, 'different-month': !day.thisMonth, selected: day.date.isSame(selected) }"
-      ng-click="select(day)" ng-repeat="day in thisMonthDays">{{day.number}}</span>
+    <span class="day-number" ng-class="{ today: day.today, 'different-month': !day.thisMonth, selected: day.selected }"
+      ng-click="(day.selected)?removeSelection(day):selectDays(day);" ng-repeat="day in thisMonthDays">{{day.number}}</span>
+</div>
+<div class="selectedDaysWrapper" ng-if="selectedDays.length>0">
+    <h3>Selected Days</h3>
+    <div ng-repeat="day in selectedDays">
+        <h5>{{day.todayName}}</h5>
+        <span>{{day.number}} - {{day.month}} - {{day.year}}</span>
+    </div>
 </div>
