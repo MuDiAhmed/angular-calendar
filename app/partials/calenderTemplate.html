@@ -1,0 +1,18 @@
+<div class="calenderHeader">
+    <i class="fa fa-2x fa-angle-left pull-left" ng-click="prevMonth()"></i>
+    <span class="month">{{month}}</span>
+    <i class="fa fa-2x fa-angle-right pull-right" ng-click="nextMonth()"></i>
+</div>
+<div class="row weekDays">
+    <span class="day">Sun</span>
+    <span class="day">Mon</span>
+    <span class="day">Tue</span>
+    <span class="day">Wed</span>
+    <span class="day">Thu</span>
+    <span class="day">Fri</span>
+    <span class="day">Sat</span>
+</div>
+<div class="row weekDays">
+    <span class="day-number" ng-class="{ today: day.today, 'different-month': !day.thisMonth, selected: day.date.isSame(selected) }"
+      ng-click="select(day)" ng-repeat="day in thisMonthDays">{{day.number}}</span>
+</div>
