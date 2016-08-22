@@ -119,7 +119,6 @@ module.exports = function(grunt) {
             'wiredep',
             'concurrent:server',
             'connect:livereload',
-            'concurrent',
             'watch'
         ]);
     });

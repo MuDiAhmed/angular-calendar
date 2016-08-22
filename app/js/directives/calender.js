@@ -24,14 +24,16 @@ app.directive('calender',[function(){
             prevCalculations();
             buildThisScreen();
             function prevCalculations(month,year){
+                thisMonthLength = 31;
+                prevMonthLength = 31;
+                var date = new Date();
                 if(month&&year){
-                    today = new Date(month+'-1-'+year);
-                    var date = new Date();
+                    today = new Date(year+'-'+month+'-'+1);
                     if(date.getFullYear() == year && date.getMonth()+1 == month){
-                        today = new Date();
+                        today = date;
                     }
                 }else{
-                    today = new Date();
+                    today = date;
                 }
                 thisYear = today.getFullYear();
                 thisMonth = today.getMonth()+1;
@@ -39,18 +41,22 @@ app.directive('calender',[function(){
                 dayNumber = today.getDate();
                 scope.thisMonth = thisMonth;
                 scope.thisYear = thisYear;
-                scope.dayNumber = dayNumber;
                 scope.month = monthNames[thisMonth-1];
+                scope.dayNumber = dayNumber;
                 scope.thisMonthDays = [];
-                if([2,4,6,9,11].indexOf(thisMonth) != -1){
+                console.log('stored month',storedMonth);
+                if([2,4,6,9,11].indexOf(storedMonth) != -1){
                     thisMonthLength = 30;
                 }
-                if([3-5-7-10-12].indexOf(thisMonth) != -1){
+                if([5,7,10,12].indexOf(storedMonth) != -1){
                     prevMonthLength = 30;
+                }
+                if(storedMonth == 3){
+                    prevMonthLength = 29;
                 }
             }
             function buildThisScreen(){
-                var firstDayOfMonth = new Date(thisMonth+'-1-'+thisYear).toDateString();
+                var firstDayOfMonth = new Date(thisYear+'-'+storedMonth+'-'+1).toDateString();
                 firstDayOfMonth = firstDayOfMonth.slice(0,firstDayOfMonth.indexOf(' '));
                 var firstDayIndex = weekDays.indexOf(firstDayOfMonth),
                     firstDay = prevMonthLength-firstDayIndex+1,
@@ -65,20 +71,24 @@ app.directive('calender',[function(){
                         firstWeek = false;
                     }
                     if((firstWeek&&firstDay>7)||(x>thisMonthLength&&firstDay<23)){
+                        console.log('not this month');
                         thisMonthCondition=false;
                         if(firstWeek){
-                            thisMonth--;
+                            thisMonth = storedMonth-1;
                         }else{
                             thisMonth = storedMonth+1;
                         }
+                        console.log('this month equal ',thisMonth);
                     }else{
                         thisMonth = storedMonth;
                     }
                     if(dayNumber == firstDay && thisMonthCondition){
                         todayCondition = true;
                     }
-                    var dayName = new Date(thisMonth+'-'+firstDay+'-'+thisYear).toDateString();
+                    var dayName = new Date(thisYear+'-'+thisMonth+'-'+firstDay).toDateString();
+                    // console.log(dayName);
                     dayName = dayName.slice(0,dayName.indexOf(' '));
+                    // console.log(dayName);
                     scope.thisMonthDays.push({
                         number:firstDay,
                         thisMonth:thisMonthCondition,
@@ -93,7 +103,8 @@ app.directive('calender',[function(){
             }
             scope.prevMonth = function(){
                 var year = thisYear,
-                    month = thisMonth-1;
+                    month = storedMonth-1;
+                console.log('month',month,'thismonth',thisMonth);
                 if(month==0){
                     month=12;
                     year--;
@@ -104,17 +115,20 @@ app.directive('calender',[function(){
             scope.nextMonth = function(){
                 console.log('next');
                 var year = thisYear,
-                    month = thisMonth+1;
+                    month = storedMonth+1;
+                console.log(month);
                 if(month==13){
                     month=1;
                     year++;
                 }
+
                 prevCalculations(month,year);
                 buildThisScreen();
             };
             scope.selectDays = function(day){
                 day.selected = true;
                 scope.selectedDays.push(day);
+                console.log(scope.selectedDays);
             };
             scope.removeSelection = function(day){
                 day.selected = false;
