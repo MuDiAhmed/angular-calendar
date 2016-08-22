@@ -89,7 +89,7 @@ app.directive('calender',[function(){
                     // console.log(dayName);
                     dayName = dayName.slice(0,dayName.indexOf(' '));
                     // console.log(dayName);
-                    scope.thisMonthDays.push({
+                    var dayObject = {
                         number:firstDay,
                         thisMonth:thisMonthCondition,
                         today:todayCondition,
@@ -97,7 +97,14 @@ app.directive('calender',[function(){
                         month:thisMonth,
                         todayName:dayName,
                         selected:false
-                    });
+                    };
+                    for(var index in scope.selectedDays){
+                        console.log(scope.selectedDays[index].number != dayObject.number || scope.selectedDays[index].year != dayObject.year || scope.selectedDays[index].month != dayObject.month);
+                        if(scope.selectedDays[index].number == dayObject.number && scope.selectedDays[index].year == dayObject.year && scope.selectedDays[index].month == dayObject.month){
+                            dayObject.selected = true;
+                        }
+                    }
+                    scope.thisMonthDays.push(dayObject);
                     firstDay++;
                 }
             }
@@ -132,7 +139,12 @@ app.directive('calender',[function(){
             };
             scope.removeSelection = function(day){
                 day.selected = false;
-                scope.selectedDays.splice(scope.selectedDays.indexOf(day), 1);
+                for(var index in scope.selectedDays){
+                    if(scope.selectedDays[index].number == day.number && scope.selectedDays[index].year == day.year && scope.selectedDays[index].month == day.month){
+                        scope.selectedDays.splice(index, 1);
+                    }
+                }
+
             }
         }
     };    
