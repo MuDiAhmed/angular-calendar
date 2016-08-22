@@ -91,15 +91,8 @@ module.exports = function(grunt) {
         compass: {
             options: {
                 sassDir: '<%= appConfigs.app %>/css',
-                // cssDir: '.tmp/styles',
-                // generatedImagesDir: '.tmp/images/generated',
-                // imagesDir: '<%= appConfigs.app %>/images',
-                javascriptsDir: '<%= appConfigs.app %>/js',
-                // fontsDir: '<%= appConfigs.app %>/css/fonts',
-                importPath: '<%= appConfigs.app %>./bower_components',
-                // httpImagesPath: '/images',
-                // httpGeneratedImagesPath: '/images/generated',
-                // httpFontsPath: '/styles/fonts',
+                cssDir: '<%= appConfigs.app %>/css',
+                fontsDir: '<%= appConfigs.app %>/css/fonts',
                 relativeAssets: false,
                 assetCacheBuster: false,
                 raw: 'Sass::Script::Number.precision = 10\n'
@@ -124,7 +117,9 @@ module.exports = function(grunt) {
 
         grunt.task.run([
             'wiredep',
+            'concurrent:server',
             'connect:livereload',
+            'concurrent',
             'watch'
         ]);
     });
