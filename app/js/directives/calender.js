@@ -19,6 +19,7 @@ app.directive('calender',[function(){
                 monthNames = ["January", "February", "March", "April", "May", "June",
                     "July", "August", "September", "October", "November", "December"
                 ],
+                weekEnds = ['Fri','Sat'],
                 storedMonth;
             scope.selectedDays = [];
             prevCalculations();
@@ -44,7 +45,6 @@ app.directive('calender',[function(){
                 scope.month = monthNames[thisMonth-1];
                 scope.dayNumber = dayNumber;
                 scope.thisMonthDays = [];
-                console.log('stored month',storedMonth);
                 if([2,4,6,9,11].indexOf(storedMonth) != -1){
                     thisMonthLength = 30;
                 }
@@ -71,14 +71,12 @@ app.directive('calender',[function(){
                         firstWeek = false;
                     }
                     if((firstWeek&&firstDay>7)||(x>thisMonthLength&&firstDay<23)){
-                        console.log('not this month');
                         thisMonthCondition=false;
                         if(firstWeek){
                             thisMonth = storedMonth-1;
                         }else{
                             thisMonth = storedMonth+1;
                         }
-                        console.log('this month equal ',thisMonth);
                     }else{
                         thisMonth = storedMonth;
                     }
@@ -86,9 +84,7 @@ app.directive('calender',[function(){
                         todayCondition = true;
                     }
                     var dayName = new Date(thisYear+'-'+thisMonth+'-'+firstDay).toDateString();
-                    // console.log(dayName);
                     dayName = dayName.slice(0,dayName.indexOf(' '));
-                    // console.log(dayName);
                     var dayObject = {
                         number:firstDay,
                         thisMonth:thisMonthCondition,
@@ -96,13 +92,16 @@ app.directive('calender',[function(){
                         year:thisYear,
                         month:thisMonth,
                         todayName:dayName,
-                        selected:false
+                        selected:false,
+                        weekEnd:false
                     };
                     for(var index in scope.selectedDays){
-                        console.log(scope.selectedDays[index].number != dayObject.number || scope.selectedDays[index].year != dayObject.year || scope.selectedDays[index].month != dayObject.month);
-                        if(scope.selectedDays[index].number == dayObject.number && scope.selectedDays[index].year == dayObject.year && scope.selectedDays[index].month == dayObject.month){
+                        if(daysAreSame(scope.selectedDays[index],dayObject)){
                             dayObject.selected = true;
                         }
+                    }
+                    if(weekEnds.indexOf(dayObject.todayName) != -1){
+                        dayObject.weekEnd = true;
                     }
                     scope.thisMonthDays.push(dayObject);
                     firstDay++;
@@ -111,7 +110,6 @@ app.directive('calender',[function(){
             scope.prevMonth = function(){
                 var year = thisYear,
                     month = storedMonth-1;
-                console.log('month',month,'thismonth',thisMonth);
                 if(month==0){
                     month=12;
                     year--;
@@ -120,10 +118,8 @@ app.directive('calender',[function(){
                 buildThisScreen();
             };
             scope.nextMonth = function(){
-                console.log('next');
                 var year = thisYear,
                     month = storedMonth+1;
-                console.log(month);
                 if(month==13){
                     month=1;
                     year++;
@@ -135,16 +131,64 @@ app.directive('calender',[function(){
             scope.selectDays = function(day){
                 day.selected = true;
                 scope.selectedDays.push(day);
-                console.log(scope.selectedDays);
             };
             scope.removeSelection = function(day){
                 day.selected = false;
                 for(var index in scope.selectedDays){
-                    if(scope.selectedDays[index].number == day.number && scope.selectedDays[index].year == day.year && scope.selectedDays[index].month == day.month){
+                    if(daysAreSame(scope.selectedDays[index],day)){
                         scope.selectedDays.splice(index, 1);
                     }
                 }
-
+            }
+            function daysAreSame(day1,day2){
+                return day1.number == day2.number && day1.year == day2.year && day1.month == day2.month;
+            }
+            scope.makeRange = function(startDate,endDate){
+                // var startDateArray = startDate.split('-'),
+                //     endDateArray = endDate.split('-');
+                // if(startDateArray.length == 3 && endDateArray.length == 3){
+                //     scope.selectedDays = [];
+                //     for(var x=startDateArray[1];x<=endDateArray[1];x++){
+                //         for(var y=startDateArray[2];y<=endDateArray[2];y++){
+                //             var date = new Date(startDateArray[0]+'-'+x+'-'+y);
+                //             var dayName = date.toDateString();
+                //             dayName = dayName.slice(0,dayName.indexOf(' '));
+                //             var dayObject = {
+                //                 number:y,
+                //                 year:startDateArray[1],
+                //                 month:x,
+                //                 todayName:dayName,
+                //                 selected:true,
+                //                 weekEnd:(weekEnds.indexOf(dayName) != -1)
+                //             };
+                //             scope.selectedDays.push(dayObject);
+                //         }
+                //     }
+                // }else{
+                //     alert('Invalid Dates');
+                // }
+                startDate = parseInt(startDate);
+                endDate = parseInt(endDate);
+                if(Number.isInteger(startDate) && Number.isInteger(endDate) && startDate>0 && startDate<32 && endDate>0 && endDate<32 && startDate<endDate){
+                    scope.selectedDays = [];
+                    console.log(scope.thisMonthDays.length-startDate>=endDate);
+                    console.log(scope.thisMonthDays.length-startDate,endDate);
+                    var loopEnd = (scope.thisMonthDays.length-startDate>=endDate)?endDate:scope.thisMonthDays.length-startDate;
+                    console.log(loopEnd);
+                    for(var y=0;y<=scope.thisMonthDays.length-1;y++){
+                        var date = scope.thisMonthDays[y];
+                        date.selected = false;
+                        if(date.number<startDate){
+                            continue;
+                        }
+                        if(date.thisMonth&&(date.number<=endDate)){
+                            date.selected = true;
+                            scope.selectedDays.push(date);
+                        }
+                    }
+                }else{
+                    alert('Invalid Dates');
+                }
             }
         }
     };    

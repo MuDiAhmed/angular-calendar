@@ -43,6 +43,7 @@ body{
     }
     .day-number{
       cursor:pointer;
+      position: relative;
     }
     .day-number:hover{
       background-color: rgba(26, 92, 225, 0.92);
@@ -57,8 +58,19 @@ body{
     .selected{
       background-color: rgba(26, 92, 225, 0.5);
     }
+    //.week-end{
+    //  background-color: rgba(236, 1, 0, 0.72);
+    //  position: absolute;
+    //  color: white;
+    //  font-size: 8px;
+    //  top: 0;
+    //  right: 0;
+    //  height: auto;
+    //  width: 30px;
+    //  padding: 0;
+    //}
   }
-  .selectedDaysWrapper{
+  .selectedDaysWrapper,.date-picker-wrapper{
     position: absolute;
     right: -220px;
     top: 0;
@@ -72,6 +84,48 @@ body{
       padding: 5px 0 5px 5px;
       margin-left: -10px;
       color: white;
+      position: relative;
     }
   }
+  .date-picker-wrapper{
+    left: -200px;
+    right: 0;
+    box-sizing: border-box;
+    height: 100%;
+    input{
+      max-width: calc(100% - 20px);
+      font-size: 14px;
+    }
+    h3{
+      background-color: rgba(26, 92, 225, 0.92);
+      padding: 5px 0 5px 5px;
+      margin-left: -10px;
+      color: white;
+    }
+    label{
+      font-size: 14px;
+      //margin: 10px 0;
+    }
+    input[type='submit']{
+      float: right;
+      margin-top: 15px;
+      background-color: rgba(26, 92, 225, 0.92);
+      color: white;
+      border: 0;
+      padding: 4px 7px;
+      border-radius: 5px;
+    }
+  }
+}
+.week-end{
+  background-color: rgba(236, 1, 0, 0.72);
+  position: absolute;
+  color: white;
+  font-size: 8px;
+  top: 0;
+  right: 0;
+  height: auto !important;
+  width: 30px !important;
+  padding: 0 !important;
+  text-align: center;
 }
